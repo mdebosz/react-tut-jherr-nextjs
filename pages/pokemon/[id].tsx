@@ -1,12 +1,19 @@
-import { PokemonInfo } from "@/components/PokemonInfo"
+import { Pokemon } from "@/src/Pokemon"
+import { NextPageContext } from "next"
 import { withRouter } from "next/router"
 
-import store from "../../src/store"
+export const getServerSideProps = async (context: NextPageContext) => {
+  const allPokemon = await (await fetch('http://localhost:3000/pokemon.json')).json()
+  const pokemon =allPokemon.find((found: Pokemon) => found.id.toString() === context.query.id)
+  
+  return {
+    props: {
+      pokemon
+    }
+  }
+}
 
-function PokemonDetail({router}) {
-  const { id } = router.query
-  const pokemon = store.pokemon.find((pokemon) => pokemon.id === parseInt(id))
-
+function PokemonDetail({pokemon}: {pokemon: Pokemon}) {
   return pokemon && (
     <div className="w-[800px] pt-4 m-auto grid grid-cols-4 gap-2">
       <h1>{pokemon?.name.english}</h1>

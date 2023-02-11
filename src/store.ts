@@ -35,14 +35,4 @@ class Store {
 
 const store = new Store();
 
-if(typeof window !== "undefined") {
-
-  fetch("/pokemon.json").then((response) => {
-    response.json().then((pokemon) => {
-      store.setPokemon(pokemon);
-    });
-  });
-}
-
-
 export default store;
