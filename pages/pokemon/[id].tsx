@@ -1,17 +1,26 @@
 import { Pokemon } from "@/src/Pokemon"
-import { NextPageContext } from "next"
-import { withRouter } from "next/router"
+import { GetStaticProps } from "next"
 
-export const getServerSideProps = async (context: NextPageContext) => {
-  const allPokemon = await (await fetch('http://localhost:3000/pokemon.json')).json()
-  const pokemon =allPokemon.find((found: Pokemon) => found.id.toString() === context.query.id)
-  
+export const getStaticPaths = async () => {
+  const pokemon = require("../../src/pokemon.json");
+  const paths = pokemon.map((p: Pokemon) => ({
+    params: {
+      id: p.id.toString(),
+    },
+  }));
   return {
-    props: {
-      pokemon
-    }
-  }
-}
+    paths,
+    fallback: false,
+  };
+};
+
+export const getStaticProps: GetStaticProps = async ({params}) => {
+  const allPokemon = require("../../src/pokemon.json");
+  const pokemon = allPokemon.find((p: Pokemon) => p.id === parseInt(params?.id as string));
+  return {
+    props: { pokemon },
+  };
+};
 
 function PokemonDetail({pokemon}: {pokemon: Pokemon}) {
   return pokemon && (
@@ -38,4 +47,4 @@ function PokemonDetail({pokemon}: {pokemon: Pokemon}) {
   )
 }
 
-export default withRouter(PokemonDetail)
+export default PokemonDetail;

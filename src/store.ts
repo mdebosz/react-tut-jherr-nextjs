@@ -4,7 +4,7 @@ import { Pokemon } from "./Pokemon";
 
 class Store {
   filter: string = "";
-  pokemon: Pokemon[] = [];
+  pokemon: Pokemon[] = require("./pokemon.json");
   selectedItem: Pokemon | null = null;
 
   constructor() {
